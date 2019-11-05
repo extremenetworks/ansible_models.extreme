@@ -1,0 +1,125 @@
+# Using deleted
+
+
+# Before state:
+# -------------
+# path: /rest/restconf/data/openconfig-lldp:lldp/interfaces?depth=4
+# method: GET
+# data:
+#  {
+#   "openconfig-lldp:interfaces": {
+#     "interface": [
+#       {
+#         "name": "1",
+#         "state": {
+#           "counters": {},
+#           "enabled": false,
+#           "name": "1"
+#         }
+#       },
+#       {
+#         "name": "2",
+#         "state": {
+#           "counters": {},
+#           "enabled": false,
+#           "name": "2"
+#         }
+#       },
+#       {
+#         "name": "3",
+#         "state": {
+#           "counters": {},
+#           "enabled": false,
+#           "name": "3"
+#         }
+#       },
+#     ]
+#   }
+# }
+
+- name: Delete lldp interface configuration (this will not delete other lldp configuration)
+  exos_lldp_interfaces:
+    config:
+      - name: '1'
+      - name: '3'
+    state: deleted
+
+# Module Execution Results:
+# -------------------------
+#
+# "before": 
+#    - name: '1'
+#      enabled: False
+#    - name: '2'
+#      enabled: False
+#    - name: '3'
+#      enabled: False
+#
+# "requests": [
+#     {
+#         "data": |
+#         {
+#           "openconfig-lldp:config": {
+#             "enabled": true,
+#             "name": "1"
+#           }
+#         }
+#         "method": "PATCH",
+#         "path": "/rest/restconf/data/openconfig-lldp:lldp/interfaces/interface=1/config"
+#     },
+#     {
+#         "data": |
+#         {
+#           "openconfig-lldp:config": {
+#             "enabled": true,
+#             "name": "3"
+#           }
+#         }
+#         "method": "PATCH",
+#         "path": "/rest/restconf/data/openconfig-lldp:lldp/interfaces/interface=3/config"
+#     }
+# ]
+#
+# "after":
+#    - name: '1'
+#      enabled: True
+#    - name: '2'
+#      enabled: False
+#    - name: '3'
+#      enabled: True
+
+# After state:
+# -------------
+# path: /rest/restconf/data/openconfig-lldp:lldp/interfaces?depth=4
+# method: GET
+# data:
+#  {
+#   "openconfig-lldp:interfaces": {
+#     "interface": [
+#       {
+#         "name": "1",
+#         "state": {
+#           "counters": {},
+#           "enabled": true,
+#           "name": "1"
+#         }
+#       },
+#       {
+#         "name": "2",
+#         "state": {
+#           "counters": {},
+#           "enabled": false,
+#           "name": "2"
+#         }
+#       },
+#       {
+#         "name": "3",
+#         "state": {
+#           "counters": {},
+#           "enabled": true,
+#           "name": "3"
+#         }
+#       },
+#     ]
+#   }
+# }
