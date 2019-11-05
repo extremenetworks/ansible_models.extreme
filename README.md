@@ -1,2 +1,2 @@
-# ansible-network-resource-module-models
- Models used for building and maintaining resource modules
+# Ansible Network Resource Module Models
+ Models used for building and maintaining Extreme Networks' resource modules
