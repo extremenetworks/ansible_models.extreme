@@ -1,0 +1,185 @@
+# Using overriden
+
+# Before state:
+# -------------
+# path: /rest/restconf/data/extreme-virtual-service:virtual-services-config/
+# method: GET
+# data:
+# {
+#   "extreme-virtual-service:virtual-services-config": {
+#     "virtual-service-config": [
+#       {
+#         "enable": true,
+#         "memory-size": 2048,
+#         "name": "test_vm",
+#         "num-cores": 1
+#       },
+#       {
+#         "enable": true,
+#         "memory-size": 2048,
+#         "name": "vm_1",
+#         "num-cores": 2,
+#         "vports": {
+#           "vport": [
+#             {
+#               "connect-type":"VTD",
+#               "name": "VP1",
+#               "port": "63",
+#               "vlans": {
+#                 "vlan": [
+#                   {
+#                     "id": 10
+#                   }
+#                 ]
+#               }
+#             }
+#           ]  
+#         }
+#       }
+#     ]
+#   }
+# }
+
+- name: Override existing configuration with the provided configuration
+  exos_virtualservices:
+    config:
+      - name: "vm_2"
+        package: "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2"
+      - name: "test_vm"
+        memory_size: 4096
+        num_cores: 2
+        enable: false
+    state: overriden
+
+# Module Execution Results:
+# -------------------------
+#
+# "before": [
+#     {
+#         "enable": True,
+#         "disks": null,
+#         "memory_size": 2048,
+#         "name": "test_vm",
+#         "num_cores": 1,
+#         "package": {
+#             "name": "TPVM_Ubuntu16.04_25Feb2019.qcow2",
+#             "path": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2"
+#         }
+#         "vnc_port": null,
+#         "vports": null,
+#         "state": "start"
+#     },
+#     {
+#         "enable": True,
+#         "disks": null,
+#         "memory_size": 2048,
+#         "name": "vm_1",
+#         "num_cores": 2,
+#         "package": {
+#             "name": "TPVM_Ubuntu16.04_25Feb2019.qcow2",
+#             "path": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2"
+#         }
+#         "vnc_port": null,
+#         "vports": {
+#             "connect_type": "VTD",
+#             "name":"VP1",
+#             "port": "63",
+#             "vlans": [
+#                 10  
+#             ]
+#         },
+#         "state": "start"
+#     }
+# ],
+#
+# "requests": [
+#     {
+#        "data": {
+#           "extreme-virtual-service:input":
+#           {
+#               "name": "vm_2",
+#               "package": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2"
+#         	}
+#        }
+#        "method": "POST",
+#        "path": "rest/restconf/operations/extreme-virtual-service:install"
+#     },
+#     {
+#        "data": {
+#         	"extreme-virtual-service:virtual-service-config": [
+#           		{
+#               		 "memory-size": 4096,
+#                        "num-cores": 2,
+#                        "enable": "false"
+#            		}
+#         	]
+#        }
+#        "method": "PATCH",
+#        "path": "rest/restconf/data/extreme-virtual-service:virtual-services-config/virtual-service-config=test_vm"
+#     },
+#     {
+#        "data": {
+#           "extreme-virtual-service:input":
+#           {
+#               "name": "vm_1"
+#         	}
+#        }
+#        "method": "POST",
+#        "path": "rest/restconf/operations/extreme-virtual-service:uninstall"
+#     }
+# ],
+#
+# "after": [
+#     {
+#         "enable": False,
+#         "disks": null,
+#         "memory_size": 4096,
+#         "name": "vm_2",
+#         "num_cores": 1,
+#         "package": {
+#             "name": "TPVM_Ubuntu16.04_25Feb2019.qcow2",
+#             "path": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2"
+#         }
+#         "vnc_port": null,
+#         "vports": null,
+#         "state": "stop"
+#     },
+#     {
+#         "enable": False,
+#         "disks": null,
+#         "memory_size": 4096,
+#         "name": "test_vm",
+#         "num_cores": 2,
+#         "package": {
+#             "name": "TPVM_Ubuntu16.04_25Feb2019.qcow2",
+#             "path": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2"
+#         }
+#         "vnc_port": null,
+#         "vports": null,
+#         "state": "start"
+#     }
+# ]
+#
+# After state:
+# -------------
+# path: /rest/restconf/data/extreme-virtual-service:virtual-services-config/
+# method: GET
+# data:
+# {
+#   "extreme-virtual-service:virtual-services-config": {
+#     "virtual-service-config": [
+#       {
+#         "enable": "false", 
+#         "memory-size": 4096, 
+#         "name": "vm_2", 
+#         "num-cores": 1
+#       },
+#       {
+#         "enable": "false",
+#         "memory-size": 4096,
+#         "name": "test_vm",
+#         "num-cores": 2
+#       }
+#     ]
+#   }
+# }

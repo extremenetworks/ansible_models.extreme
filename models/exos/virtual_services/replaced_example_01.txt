@@ -1,0 +1,172 @@
+# Using replaced
+
+# Before state:
+# -------------
+# path: /rest/restconf/data/extreme-virtual-service:virtual-services-config/
+# method: GET
+# data:
+# {
+#   "extreme-virtual-service:virtual-services-config": {
+#     "virtual-service-config": [
+#       {
+#         "enable": true,
+#         "memory-size": 2048,
+#         "name": "test_vm",
+#         "num-cores": 1
+#       },
+#       {
+#         "enable": true,
+#         "memory-size": 2048,
+#         "name": "vm_1",
+#         "num-cores": 2,
+#         "vports": {
+#           "vport": [
+#             {
+#               "connect-type":"VTD",
+#               "name": "VP1",
+#               "port": "63",
+#               "vlans": {
+#                 "vlan": [
+#                   {
+#                     "id": 10
+#                   }
+#                 ]
+#               }
+#             }
+#           ]  
+#         }
+#       }
+#     ]
+#   }
+# }
+
+- name: Replace existing configuration with the provided configuration
+  exos_virtualservices:
+    config:
+      - name: "test_vm"
+        num_cores: 2
+    state: replaced
+
+# Module Execution Results:
+# -------------------------
+#
+# "before": [
+#     {
+#         "enable": True,
+#         "disks": null,
+#         "memory_size": 2048,
+#         "name": "test_vm",
+#         "num_cores": 1,
+#         "package": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2"
+#         "vnc_port": null,
+#         "vports": null,
+#         "operational_state": "start"
+#     },
+#     {
+#         "enable": True,
+#         "disks": null,
+#         "memory_size": 2048,
+#         "name": "vm_1",
+#         "num_cores": 2,
+#         "package": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2"
+#         "vnc_port": null,
+#         "vports": {
+#             "connect_type": "VTD",
+#             "name":"VP1",
+#             "port": "63",
+#             "vlans": [
+#                 10  
+#             ]
+#         },
+#         "operational_state": "start"
+#     }
+# ],
+#
+# "requests": [
+#     {
+#        "data": {
+#         	"extreme-virtual-service:virtual-service-config": [
+#           		{
+#               		 "memory-size": 4096,
+#                    "num-cores": 2,
+#                    "enable": "false"
+#            		}
+#         	]
+#        }
+#        "method": "PATCH",
+#        "path": "rest/restconf/data/extreme-virtual-service:virtual-services-config/virtual-service-config=test_vm" 
+#     }
+# ],
+#
+# "after": [
+# "before": [
+#     {
+#         "enable": False,
+#         "disks": null,
+#         "memory_size": 4096,
+#         "name": "test_vm",
+#         "num_cores": 2,
+#         "package": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2"
+#         "vnc_port": null,
+#         "vports": null,
+#         "operational_state": "start"
+#     },
+#     {
+#         "enable": True,
+#         "disks": null,
+#         "memory_size": 2048,
+#         "name": "vm_1",
+#         "num_cores": 2,
+#         "package": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2"
+#         "vnc_port": null,
+#         "vports": {
+#             "connect_type": "VTD",
+#             "name":"VP1",
+#             "port": "63",
+#             "vlans": [
+#                 10  
+#             ]
+#         },
+#         "operational_state": "start"
+#     }
+# ]
+#
+# After state:
+# -------------
+# path: /rest/restconf/data/extreme-virtual-service:virtual-services-config/
+# method: GET
+# data:
+# {
+#   "extreme-virtual-service:virtual-services-config": {
+#     "virtual-service-config": [
+#       {
+#         "enable": "false",
+#         "memory-size": 4096,
+#         "name": "test_vm",
+#         "num-cores": 2
+#       },
+#       {
+#         "enable": "false",
+#         "memory-size": 4096,
+#         "name": "vm_1",
+#         "num-cores": 1,
+#         "vports": {
+#           "vport": [
+#             {
+#               "connect-type": "VTD",
+#               "name": "VP1",
+#               "port": "63",
+#               "vlans": {
+#                 "vlan": [
+#                   {
+#                     "id": 10
+#                   }
+#                 ]
+#               }
+#             }
+#           ]  
+#         }
+#       }
+#     ]
+#   }
+# }
