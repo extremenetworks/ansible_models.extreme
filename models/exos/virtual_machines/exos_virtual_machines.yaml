@@ -13,11 +13,11 @@ COPYRIGHT: Copyright 2019 Red Hat
 DOCUMENTATION: |
   module: exos_guest_virtual_machines
   version_added: "2.10"
-  short_description:  Manage virtual machines on EXOS devices.
-  description: This module can be used to create new Virtual machines on EXOS network devices, 
+  short_description:  Manage guest virtual machines on EXOS devices.
+  description: This module can be used to create guest Virtual machines on EXOS network devices, 
                manage operational state such as start, stop, restart,
                update its components such as CPUs, memory, virtual ports, disks etc. and
-               delete a virtual service with all its associated components.
+               delete a virtual machines with all its associated components.
   author: Jayalakshmi Viswanathan (@jayalakshmiV)
   notes:
     - Tested against EXOS 30.5
@@ -25,7 +25,7 @@ DOCUMENTATION: |
       See L(EXOS Platform Options,../network/user_guide/platform_exos.html)
   options:
     config:
-      description: A dictionary of VM configuration options
+      description: A dictionary of Virtual machine configuration options
       type: list
       elements: dict
       suboptions:
@@ -81,7 +81,7 @@ DOCUMENTATION: |
               type: bool
             port:
               description:
-                - VNC port number to be assigned to the Virtual machine. VNC port number ranges from 5900 to 5915
+                - VNC port number to be assigned to the Virtual machine. Possible range is 5900 to 5915
               type: int
         auto_start:
           description:
@@ -89,7 +89,7 @@ DOCUMENTATION: |
           type: bool
         operational_state:
           description:
-            - State the virtual service should be left in
+            - State the virtual machine should be left in
           type: str
           choices:
             - started
