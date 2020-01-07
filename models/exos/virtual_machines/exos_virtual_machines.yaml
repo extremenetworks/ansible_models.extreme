@@ -14,10 +14,11 @@ DOCUMENTATION: |
   module: exos_guest_virtual_machines
   version_added: "2.10"
   short_description:  Manage guest virtual machines on EXOS devices.
-  description: This module can be used to create guest Virtual machines on EXOS network devices, 
-               manage operational state such as start, stop, restart,
-               update its components such as CPUs, memory, virtual ports, disks etc. and
-               delete a virtual machines with all its associated components.
+  description: 
+    - This module can be used to create guest Virtual machines on EXOS network devices
+    - Manages operational state such as start, stop and restart
+    - Updates its components such as CPUs, memory, virtual ports, disks etc.
+    - delete a virtual machine with all its associated components.
   author: Jayalakshmi Viswanathan (@jayalakshmiV)
   notes:
     - Tested against EXOS 30.5
@@ -33,9 +34,9 @@ DOCUMENTATION: |
           description:
             - Name of the virtual machine
           type: str
-        image_path:
+        image:
           description:
-            - Location of the image on the switch to be installed
+            - Name and location of the image on the switch to be installed
           type: str
         num_cores:
           description:
@@ -48,6 +49,9 @@ DOCUMENTATION: |
         virtual_ports:
           description:
             - Virtual port to be used by the virtual machine
+            - Only local Insight ports can be assigned as a dedicated port (type - vtd) or a virtual interface (type - sriov).
+            - An Insight port assigned as a dedicated port to a VM cannot be used to define a virtual interface for any VM or vice versa.
+            - An Insight port can have maximum of 16 active virtual interfaces associated with it at a time.
           type: dict
           suboptions:
             name:
@@ -58,10 +62,10 @@ DOCUMENTATION: |
               description:
                 - Port associated with the virtual port
               type: str
-            vlans:
+            vlan:
               description:
-                - List of vlans to which the virtual port will be attached
-              type: list
+                - Vlan to which the virtual port to be attached
+              type: int
             type:
               description:
                 - Virtual port connect type
@@ -95,6 +99,10 @@ DOCUMENTATION: |
             - started
             - stopped
             - restarted
+        forceful:
+          description:
+            - Forcefully stop/restart the virtual machine. Used with stop and restart operational_state.
+          type: bool
     state:
       description:
       - The state the configuration should be left in
