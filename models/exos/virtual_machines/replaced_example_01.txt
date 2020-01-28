@@ -1,0 +1,225 @@
+# Using replaced
+
+# Before state:
+# -------------
+# path: /rest/restconf/data/extreme-virtual-service:virtual-services-config/
+# method: GET
+# data:
+# {
+#   "extreme-virtual-service:virtual-services-config": {
+#     "virtual-service-config": [
+#       {
+#         "enable": "false",
+#         "memory-size": 1024,
+#         "name": "ova_new",
+#         "num-cores": 2,
+#         "vnc-port": 5901,
+#         "vports": {
+#           "vport": [
+#             {
+#               "connect-type": "BRIDGE",
+#               "name": "mgmt",
+#               "port": "mgmt"
+#             },
+#             {
+#               "connect-type": "VTD",
+#               "name": "57",
+#               "port": "57"
+#             },
+#             {
+#               "connect-type": "SRIOV",
+#               "name": "VF1-58",
+#               "port": "58"
+#             }
+#           ]
+#         }
+#       },
+#       {
+#         "enable": "false",
+#         "memory-size": 4096,
+#         "name": "vm_1",
+#         "num-cores": 1,
+#         "vnc-port": 0
+#       }
+#     ]
+#   }
+# }
+
+- name: Replace provided configuration with the device configuration
+  exos_guest_virtual_machines:
+    config:
+      - name: "vm_1"
+        num_cores: 2
+        memory_size: 2048
+        vnc:
+          enabled: True
+          port: 5903
+      - name: "ova_new"
+        virtual_ports:
+          name: "VF2-58"
+          port: 58
+          type: "SRIOV"
+    state: replaced
+
+# Module Execution Results:
+# -------------------------
+#
+# "before": [
+#     {
+#         "auto_started": False,
+#         "image_path": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2",
+#         "memory_size": 1024,
+#         "name": "ova_new",
+#         "num_cores": 2,
+#         "operational_state": "started",
+#         "vnc": {
+#             "enabled": True,
+#             "port": 5901
+#         },
+#         "virtual_ports": [
+#             {
+#                 "type": "BRIDGE",
+#                 "name": "mgmt",
+#                 "port": "mgmt",
+#                 "vlans": null
+#             },
+#             {
+#                 "type": "VTD",
+#                 "name": "57",
+#                 "port": "57",
+#                 "vlans": null
+#             },
+#             {
+#                 "type": "SRIOV",
+#                 "name": "VF1-58",
+#                 "port": "58",
+#                 "vlans": null
+#             }
+#         ]
+#     },
+#     {
+#         "auto_started": False,
+#         "image_path": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2",
+#         "memory_size": 4096,
+#         "name": "vm_1",
+#         "num_cores": 2,
+#         "operational_state": "started",
+#         "vnc": {
+#             "enabled": False,
+#             "port": null
+#         },
+#         "virtual_ports": null
+#     }
+# ],
+#
+# "requests": [
+#     {
+#        "data": {
+#	   "extreme-virtual-service:virtual-service-config": [
+#              {
+#                "memory-size": 2048,
+#                "num-cores": 2,  
+#                "vnc-port": 5903
+#              } 
+#          ]
+#        }
+#        "method": "PATCH"
+#        "path": "/rest/restconf/data/extreme-virtual-service:virtual-services-config/virtual-service-config=vm_1"
+#     },
+#     {
+#        "data": {
+#	   "extreme-virtual-service:vports": [
+#              {
+#                "name": "VF2-58",
+#                "port": 58,  
+#                "type": "SRIOV"
+#              }
+#          ]
+#        }
+#        "method": "PATCH"
+#        "path": "/rest/restconf/data/extreme-virtual-service:virtual-services-config/virtual-service-config=ova_new/vports"
+#     },
+#     {
+#        "method": "DELETE",
+#        "path": "/rest/restconf/data/extreme-virtual-service:virtual-services-config/virtual-service-config=ova_new/vports/vport=mgmt"
+#     },
+#     {
+#        "method": "DELETE",
+#        "path": "/rest/restconf/data/extreme-virtual-service:virtual-services-config/virtual-service-config=ova_new/vports/vport=57"
+#     },
+#     {
+#        "method": "DELETE",
+#        "path": "/rest/restconf/data/extreme-virtual-service:virtual-services-config/virtual-service-config=ova_new/vports/vport=VF1-58"
+#     }
+# ],
+#
+# "after": [
+#     {
+#         "auto_started": False,
+#         "image_path": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2",
+#         "memory_size": 1024,
+#         "name": "ova_new",
+#         "num_cores": 2,
+#         "operational_state": "started",
+#         "vnc": {
+#             "enabled": True,
+#             "port": 5901
+#         },
+#         "virtual_ports": [
+#             {
+#                 "type": "SRIOV",
+#                 "name": "VF2-58",
+#                 "port": "58",
+#                 "vlans": null
+#             }
+#         ]
+#     },
+#     {
+#         "auto_started": False,
+#         "image_path": "/usr/local/vm/packages/TPVM_Ubuntu16.04_25Feb2019.qcow2",
+#         "memory_size": 2048,
+#         "name": "vm_1",
+#         "num_cores": 2,
+#         "operational_state": "started",
+#         "vnc": {
+#             "enabled": True,
+#             "port": 5903
+#         },
+#         "virtual_ports": null
+#     }
+# ]
+#
+# After state:
+# -------------
+# path: /rest/restconf/data/extreme-virtual-service:virtual-services-config/
+# method: GET
+# data:
+# {
+#   "extreme-virtual-service:virtual-services-config": {
+#     "virtual-service-config": [
+#       {
+#         "enable": "false",
+#         "memory-size": 1024,
+#         "name": "ova_new",
+#         "num-cores": 2,
+#         "vnc-port": 5901,
+#         "vports": {
+#           "vport": [
+#             {
+#               "connect-type": "SRIOV",
+#               "name": "VF2-58",
+#               "port": "58"
+#             }
+#           ]
+#         }
+#       },
+#       {
+#         "enable": "false",
+#         "memory-size": 2048,
+#         "name": "vm_1",
+#         "num-cores": 2,
+#         "vnc-port": 5903
+#       }
+#     ]
+#   }
+# }
