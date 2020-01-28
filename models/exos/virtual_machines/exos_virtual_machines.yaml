@@ -11,114 +11,114 @@ RESOURCE: guest_virtual_machines
 COPYRIGHT: Copyright 2019 Red Hat
 
 DOCUMENTATION: |
-module: exos_guest_virtual_machines
-version_added: "2.10"
-short_description:  Manage guest virtual machines on EXOS devices.
-description:
-  - This module can be used to create guest Virtual machines on EXOS network devices
-  - Manages operational state such as start, stop and restart
-  - Updates its components such as CPUs, memory, virtual ports, disks etc.
-  - Deletes a guest virtual machine with all its associated components.
-author: Jayalakshmi Viswanathan (@jayalakshmiV)
-notes:
-  - Tested against EXOS 30.5
-  - This module works with connection C(httpapi).
-    See L(EXOS Platform Options,../network/user_guide/platform_exos.html)
-options:
-  config:
-    description: A dictionary of Virtual machine configuration options
-    type: list
-    elements: dict
-    suboptions:
-      name:
-        description:
-          - Name of the virtual machine
-        type: str
-        required: True
-      image:
-        description:
-          - Name and location of the image on the switch to be installed
-        type: str
-      num_cores:
-        description:
-          - Number of CPU cores assigned to the virtual machine
-        type: int
-      memory_size:
-        description:
-          - Memory size in Megabytes assigned to the virtual machine
-        type: int
-      virtual_ports:
-        description:
-          - Virtual port to be used by the virtual machine.
-          - Only local Insight ports can be assigned as a dedicated port (type - vtd) or a virtual interface (type - sriov).
-          - An Insight port assigned as a dedicated port to a VM cannot be used to define a virtual interface for any VM or vice versa.
-          - An Insight port can have maximum of 16 active virtual interfaces associated with it at a time.
-        type: list
-        suboptions:
-          name:
-            description:
-              - Name of the virtual port interface
-            type: str
-            required: True
-          port:
-            description:
-              - Port associated with the virtual port
-            type: str
-          vlan_id:
-            description:
-              - Vlan to which the virtual port is to be attached
-            type: int
-          type:
-            description:
-              - Virtual port connect type.
-            type: str
-            choices:
-              - vtd
-              - sriov
-              - bridge
-            required: True
-      vnc:
-        description:
-          - VNC configuration for the virtual machine.
-        type: dict
-        suboptions:
-          enabled:
-            description:
-              - Enable/disable VNC port access for the virtual machine
-            type: bool
-            default: False
-          port:
-            description:
-              - VNC port number to be assigned to the Virtual machine. Possible range is 5900 to 5915
-            type: int
-      auto_start:
-        description:
-          - Auto-start virtual machine on boot
-        type: bool
-        default: False
-      operational_state:
-        description:
-          - State the virtual machine should be left in
-        type: str
-        choices:
-          - started
-          - stopped
-          - restarted
-      forceful:
-        description:
-          - Forcefully stop/restart the virtual machine. Used with stop and restart operational_state.
-        type: bool
-        default: False
-  state:
-    description:
-      - The state the configuration should be left in
-    type: str
-    choices:
-      - merged
-      - replaced
-      - overridden
-      - deleted
-    default: merged
+  module: exos_guest_virtual_machines
+  version_added: "2.10"
+  short_description:  Manage guest virtual machines on EXOS devices.
+  description:
+    - This module can be used to create guest Virtual machines on EXOS network devices
+    - Manages operational state such as start, stop and restart
+    - Updates its components such as CPUs, memory, virtual ports, disks etc.
+    - Deletes a guest virtual machine with all its associated components.
+  author: Jayalakshmi Viswanathan (@jayalakshmiV)
+  notes:
+    - Tested against EXOS 30.5
+    - This module works with connection C(httpapi).
+      See L(EXOS Platform Options,../network/user_guide/platform_exos.html)
+  options:
+    config:
+      description: A dictionary of Virtual machine configuration options
+      type: list
+      elements: dict
+      suboptions:
+        name:
+          description:
+            - Name of the virtual machine
+          type: str
+          required: True
+        image:
+          description:
+            - Name and location of the image on the switch to be installed
+          type: str
+        num_cores:
+          description:
+            - Number of CPU cores assigned to the virtual machine
+          type: int
+        memory_size:
+          description:
+            - Memory size in Megabytes assigned to the virtual machine
+          type: int
+        virtual_ports:
+          description:
+            - Virtual port to be used by the virtual machine.
+            - Only local Insight ports can be assigned as a dedicated port (type - vtd) or a virtual interface (type - sriov).
+            - An Insight port assigned as a dedicated port to a VM cannot be used to define a virtual interface for any VM or vice versa.
+            - An Insight port can have maximum of 16 active virtual interfaces associated with it at a time.
+          type: list
+          suboptions:
+            name:
+              description:
+                - Name of the virtual port interface
+              type: str
+              required: True
+            port:
+              description:
+                - Port associated with the virtual port
+              type: str
+            vlan_id:
+              description:
+                - Vlan to which the virtual port is to be attached
+              type: int
+            type:
+              description:
+                - Virtual port connect type.
+              type: str
+              choices:
+                - vtd
+                - sriov
+                - bridge
+              required: True
+        vnc:
+          description:
+            - VNC configuration for the virtual machine.
+          type: dict
+          suboptions:
+            enabled:
+              description:
+                - Enable/disable VNC port access for the virtual machine
+              type: bool
+              default: False
+            port:
+              description:
+                - VNC port number to be assigned to the Virtual machine. Possible range is 5900 to 5915
+              type: int
+        auto_start:
+          description:
+            - Auto-start virtual machine on boot
+          type: bool
+          default: False
+        operational_state:
+          description:
+            - State the virtual machine should be left in
+          type: str
+          choices:
+            - started
+            - stopped
+            - restarted
+        forceful:
+          description:
+            - Forcefully stop/restart the virtual machine. Used with stop and restart operational_state.
+          type: bool
+          default: False
+    state:
+      description:
+        - The state the configuration should be left in
+      type: str
+      choices:
+        - merged
+        - replaced
+        - overridden
+        - deleted
+      default: merged
 EXAMPLES:
   - deleted_example_01.txt
   - merged_example_01.txt
