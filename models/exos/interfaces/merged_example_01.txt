@@ -1,0 +1,186 @@
+# Using merged
+# Before state:
+# -------------
+# path: /rest/restconf/data/openconfig-interfaces:interfaces/
+# method: GET
+# data:
+# {
+#   "openconfig-interfaces:interfaces": {
+#     "interface": [
+#       {
+#         "config": {
+#           "description": "Port 1",
+#           "enabled": true,
+#           "name": "1",
+#         },
+#         "openconfig-if-ethernet:ethernet": {
+#           "config": {
+#             "auto-negotiate": true,
+#             "duplex-mode": "FULL",
+#             "port-speed": "SPEED_1GB"
+#         },
+#       },
+#       {
+#         "config": {
+#           "description": "Port 2",
+#           "enabled": true,
+#           "name": "2",
+#         },
+#         "openconfig-if-ethernet:ethernet": {
+#           "config": {
+#             "auto-negotiate": true,
+#             "duplex-mode": "FULL",
+#             "port-speed": "SPEED_1GB"
+#         },
+#       }
+#     ]
+#   }
+# }
+
+# vexos# show ports 1 info detail | grep Jumbo
+# Jumbo:		Enabled
+# vexos# show ports 2 info detail | grep Jumbo
+# Jumbo:		Enabled
+
+- name: Merge provided interface configuration with the device configuration
+  exos_interfaces:
+    config:
+      - name: "1"
+        enabled: false
+        jumbo_frames:
+          enabled: false
+      - name: "2"
+        description: "Interface 2"
+        speed: "SPEED_100MB",
+        duplex: "FULL"
+    state: merged
+
+# Module Execution Results:
+# -------------------------
+#
+# "before": [
+#     {
+#         "enabled": true,
+#         "description": "Port 1",
+#         "duplex": "FULL",
+#         "jumbo_frames": {
+#             "enabled": true
+#         },
+#         "name": "1",
+#         "speed": "SPEED_1GB"
+#     },
+#     {
+#         "enabled": true,
+#         "description": "Port 2",
+#         "duplex": "FULL",
+#         "jumbo_frames": {
+#             "enabled": true
+#         },
+#         "name": "2",
+#         "speed": "SPEED_1GB"
+#     }
+# ],
+#
+# "requests": [
+#     {
+#        "data": {
+#          "openconfig-interfaces:config": {
+#            "enabled": false
+#          }
+#        }
+#        "method": "PATCH",
+#        "path": "rest/restconf/data/openconfig-interfaces:interfaces/interface=1/config"
+#     },
+#     {
+#        "data": {
+#          "openconfig-interfaces:config": {
+#            "description": "Interface 2"
+#          }
+#        }
+#        "method": "PATCH",
+#        "path": "rest/restconf/data/openconfig-interfaces:interfaces/interface=2/config"
+#     },
+#     {
+#        "data": {
+#          "openconfig-if-ethernet:config": {
+#       	 "auto-negotiate": true,
+#		     "port-speed": "SPEED_100MB",
+#		     "duplex-mode": "FULL"
+#        }
+#        "method": "PATCH",
+#        "path": "rest/restconf/data/openconfig-interfaces:interfaces/interface=2/openconfig-if-ethernet:ethernet/config"
+#     }
+# ],
+#
+# "commands": [
+#     {
+#        "disable jumbo-frame ports 1"
+#     }
+# ],
+#
+# "after": [
+#     {
+#         "enabled": false,
+#         "description": "Port 1",
+#         "duplex": "FULL",
+#         "jumbo_frames": {
+#             "enabled": false
+#         },
+#         "name": "1",
+#         "speed": "SPEED_1GB"
+#     },
+#     {
+#         "enabled": true,
+#         "description": "Interface 2",
+#         "duplex": "FULL",
+#         "jumbo_frames": {
+#             "enabled": true
+#         },
+#         "name": "2",
+#         "speed": "SPEED_100MB"
+#     }
+# ]
+#
+# After state:
+# -------------
+#
+# path: /rest/restconf/data/openconfig-interfaces:interfaces/
+# method: GET
+# data:
+# {
+#   "openconfig-interfaces:interfaces": {
+#     "interface": [
+#       {
+#         "config": {
+#           "description": "Port 1",
+#           "enabled": false,
+#           "name": "1",
+#         },
+#         "openconfig-if-ethernet:ethernet": {
+#           "config": {
+#             "auto-negotiate": true,
+#             "duplex-mode": "FULL",
+#             "port-speed": "SPEED_1GB"
+#         },
+#       },
+#       {
+#         "config": {
+#           "description": "Interface 2",
+#           "enabled": true,
+#           "name": "2",
+#         },
+#         "openconfig-if-ethernet:ethernet": {
+#           "config": {
+#             "auto-negotiate": true,
+#             "duplex-mode": "FULL",
+#             "port-speed": "SPEED_100MB"
+#         },
+#       }
+#     ]
+#   }
+# }
+#
+# vexos# show ports 1 info detail | grep Jumbo
+# Jumbo:		Disabled
+# vexos# show ports 2 info detail | grep Jumbo
+# Jumbo:		Enabled
