@@ -1,0 +1,78 @@
+---
+GENERATOR_VERSION: '1.0'
+ANSIBLE_METADATA: |
+    {
+        'metadata_version': '1.1',
+        'status': ['preview'],
+        'supported_by': 'community'
+    }
+NETWORK_OS: exos
+RESOURCE: interfaces
+COPYRIGHT: Copyright 2019 Red Hat
+
+DOCUMENTATION: |
+  module: exos_interfaces
+  version_added: "2.10"
+  short_description: Manage interface attributes on EXOS platforms
+  description: This module provides declarative management of interface attributes on Extreme Networks EXOS network devices.
+  author: Jayalakshmi Viswanathan (@jayalakshmiV)
+  notes:
+    - Tested against EXOS 30.5
+    - This module works with connection C(httpapi).
+      See L(EXOS Platform Options,../network/user_guide/platform_exos.html)
+  options:
+    config:
+      description: A dictionary of interface options
+      type: list
+      elements: dict
+      suboptions:
+        name:
+          description:
+            - Full name of the interface.
+          type: str
+          required: true
+        description:
+          description:
+            - Interface description.
+          type: str
+        duplex:
+          description:
+            - Interface link status. Applicable for Ethernet interfaces only, either in half duplex, full duplex or in automatic state which negotiates the duplex automatically.
+          type: str
+          choices:
+            - FULL
+            - HALF
+        enabled:
+          description:
+            - Administrative state of the interface. Set the value to true to administratively enable the interface or false to disable it.
+          type: bool
+          default: true
+        jumbo_frames:
+          description:
+            - Jumbo frames support on the interface.
+          type: dict
+          suboptions:
+            enabled:
+              description:
+                - Enabling jumbo frame support on the interface.
+              type: bool
+              default: false
+        speed:
+          description:
+            - Interface link speed. Applicable for Ethernet interfaces only.
+          type: str
+    state:
+      description:
+        - The state the configuration should be left in
+      type: str
+      choices:
+        - merged
+        - replaced
+        - overridden
+        - deleted
+      default: merged
+EXAMPLES:
+  - deleted_example_01.txt
+  - merged_example_01.txt
+  - overridden_example_01.txt
+  - replaced_example_01.txt
